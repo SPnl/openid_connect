@@ -228,10 +228,11 @@ function openid_connect_save_userinfo($account, $userinfo) {
       continue;
     }
     $claim = variable_get('openid_connect_userinfo_mapping_property_' . $property_name, NULL);
-    if ($claim && isset($userinfo[$claim])) {
+    $value = openid_connect_array_search_key($claim, $userinfo);
+    if ($claim && $value !== FALSE) {
       // Set the user property, while ignoring exceptions from invalid values.
       try {
-        $account_wrapper->{$property_name} = $userinfo[$claim];
+        $account_wrapper->{$property_name} = $value;
       }
       catch (EntityMetadataWrapperException $e) {
         watchdog_exception('openid_connect', $e);
@@ -912,3 +913,14 @@ function openid_connect_connect_current_user($client, $tokens) {
 
   return TRUE;
 }
+
+function openid_connect_array_search_key($needle_key, $array) {
+  foreach($array AS $key=>$value){
+    if($key === $needle_key) return $value;
+    if(is_array($value)){
+      if( ($result = openid_connect_array_search_key($needle_key,$value)) !== false)
+        return $result;
+    }
+  }
+  return false;
+} 
