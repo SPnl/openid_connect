@@ -37,4 +37,5 @@ class OpenIDConnectClientGoogle extends OpenIDConnectClientBase {
 
     return $userinfo;
   }
+
 }

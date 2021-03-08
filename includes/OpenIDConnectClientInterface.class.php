@@ -5,6 +5,9 @@
  * Interface to implement OpenID Connect clients.
  */
 
+/**
+ * Interface of the OpenID Connect client.
+ */
 interface OpenIDConnectClientInterface {
 
   /**
@@ -98,7 +101,7 @@ interface OpenIDConnectClientInterface {
    * @param string $authorization_code
    *   Authorization code received as a result of the the authorization request.
    *
-   * @return array|FALSE
+   * @return array|false
    *   FALSE on failure, or an associative array containing:
    *   - id_token: The ID token that holds user data.
    *   - access_token: Access token that can be used to obtain user profile

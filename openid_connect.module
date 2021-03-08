@@ -29,7 +29,7 @@ function openid_connect_menu() {
     'page arguments' => array(1),
     'access callback' => 'openid_connect_redirect_access',
     'type' => MENU_CALLBACK,
-    'file' => 'includes/openid_connect.pages.inc'
+    'file' => 'includes/openid_connect.pages.inc',
   );
   $items['user/%user/connected-accounts'] = array(
     'title' => 'Connected accounts',
@@ -39,7 +39,7 @@ function openid_connect_menu() {
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 5,
-    'file' => 'includes/openid_connect.forms.inc'
+    'file' => 'includes/openid_connect.forms.inc',
   );
 
   return $items;
@@ -89,6 +89,7 @@ function openid_connect_ctools_plugin_type() {
  *   The name of the client to instantiate.
  *
  * @return OpenIDConnectClientInterface
+ *   Client instance.
  */
 function openid_connect_get_client($client_name) {
   $clients = &drupal_static(__FUNCTION__);
@@ -123,7 +124,7 @@ function openid_connect_get_plugin($client_name) {
 /**
  * Returns the available OpenID Connect client plugins.
  *
- * @param $enabled_only
+ * @param bool $enabled_only
  *   Whether to return only the plugins enabled by the administrator.
  */
 function openid_connect_get_plugins($enabled_only = FALSE) {
@@ -357,7 +358,7 @@ function openid_connect_save_destination() {
  * @param string $client_name
  *   The machine name of the client.
  *
- * @return object|FALSE
+ * @return object|false
  *   The user object or FALSE on failure.
  */
 function openid_connect_create_user($sub, $userinfo, $client_name) {
@@ -412,7 +413,7 @@ function openid_connect_generate_username($sub, $userinfo, $client_name) {
  */
 function openid_connect_username_exists($name) {
   return db_query('SELECT COUNT(*) FROM {users} WHERE name = :name', array(
-    ':name' => $name
+    ':name' => $name,
   ))->fetchField() > 0;
 }
 
@@ -526,6 +527,7 @@ function openid_connect_user_load_by_sub($sub, $client_name) {
  * @see http://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims
  *
  * @return array
+ *   Set of standard claims.
  */
 function openid_connect_claims() {
   $claims = array(
@@ -627,7 +629,9 @@ function openid_connect_get_scopes() {
  * Returns user properties that can be skipped when mapping user profile info.
  */
 function _openid_connect_user_properties_to_skip() {
-  $properties_to_skip = array('name', 'mail', 'uid', 'url', 'edit_url', 'last_access', 'last_login', 'created', 'roles', 'status', 'theme');
+  $properties_to_skip = array(
+    'name', 'mail', 'uid', 'url', 'edit_url', 'last_access', 'last_login', 'created', 'roles', 'status', 'theme',
+  );
   return drupal_map_assoc($properties_to_skip);
 }
 
@@ -752,7 +756,7 @@ function openid_connect_disconnect_account($account, $client_name, $sub = NULL) 
  *   The user claims as returned from
  *   OpenIDConnectClientInterface::retrieveUserInfo().
  *
- * @return string|FALSE
+ * @return string|false
  *   The sub, or FALSE if there was an error.
  */
 function openid_connect_extract_sub($user_data, $userinfo) {
