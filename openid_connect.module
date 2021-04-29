@@ -924,3 +924,7 @@ function openid_connect_array_search_key($needle_key, $array) {
   }
   return false;
 } 
+
+function openid_connect_update_projects_alter(&$projects){
+  unset($projects['openid_connect']);
+}
