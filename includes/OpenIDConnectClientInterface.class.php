@@ -5,6 +5,8 @@
  * Interface to implement OpenID Connect clients.
  */
 
+// phpcs:disable Drupal.Commenting.FunctionComment.TypeHintMissing
+
 /**
  * Interface of the OpenID Connect client.
  */
@@ -37,13 +39,13 @@ interface OpenIDConnectClientInterface {
   /**
    * Validates the settings form.
    *
-   * @param $form
+   * @param array $form
    *   The settings form.
-   * @param $form_state
+   * @param array $form_state
    *   An array containing the current state of the form. Contains only
    *   the 'values' key, since it is actually constructed on the fly by the
    *   parent form.
-   * @param $error_element_base
+   * @param string $error_element_base
    *   The base to prepend to field names when using form_set_error().
    */
   public function settingsFormValidate($form, &$form_state, $error_element_base);
@@ -54,9 +56,9 @@ interface OpenIDConnectClientInterface {
    * Note that there is no need to handle saving the options, that is done
    * by the parent form.
    *
-   * @param $form
+   * @param array $form
    *   The settings form.
-   * @param $form_state
+   * @param array $form_state
    *   An array containing the current state of the form. Contains only
    *   the 'values' key, since it is actually constructed on the fly by the
    *   parent form.

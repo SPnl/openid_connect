@@ -5,6 +5,8 @@
  * A pluggable client implementation for the OpenID Connect protocol.
  */
 
+// phpcs:disable Drupal.Commenting.FunctionComment.TypeHintMissing
+
 /**
  * Base path where to login providers can redirect in the OAuth2 flow.
  */
@@ -641,11 +643,11 @@ function _openid_connect_user_properties_to_skip() {
 function openid_connect_log_request_error($method, $client_name, $response) {
   switch ($method) {
     case 'retrieveTokens':
-      $message = 'Could not retrieve tokens';
+      $message = 'Could not retrieve tokens (@code @error). Details: @details';
       break;
 
     case 'retrieveUserInfo':
-      $message = 'Could not retrieve user profile information';
+      $message = 'Could not retrieve user profile information (@code @error). Details: @details';
       break;
 
     default:
@@ -662,7 +664,7 @@ function openid_connect_log_request_error($method, $client_name, $response) {
     '@code' => $response->code,
     '@details' => $details,
   );
-  watchdog('openid_connect_' . $client_name, $message . ' (@code @error). Details: @details', $variables, WATCHDOG_ERROR);
+  watchdog('openid_connect_' . $client_name, $message, $variables, WATCHDOG_ERROR);
 }
 
 /**
