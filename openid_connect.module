@@ -918,3 +918,38 @@ function openid_connect_connect_current_user($client, $tokens) {
 
   return TRUE;
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function openid_connect_form_user_pass_alter(array &$form,  &$form_state) {
+  $form['#validate'][] = '_openid_connect_user_pass_form_validate';
+}
+
+/**
+ * Custom validation for the password reset form.
+ */
+function _openid_connect_user_pass_form_validate(array &$form,  &$form_state) {
+  // If the account doesn't exist, return early.
+  if (empty($form_state['values']['account'])) {
+    return;
+  }
+
+  $account = $form_state['values']['account'];
+
+  $results = openid_connect_get_connected_accounts($account);
+
+  // If not in the authmap table, return early.
+  if (empty($results)) {
+    return;
+  }
+
+  // If the user has permission to manage their local password, allow it.
+  if (user_access('openid_connect set own password', $account)) {
+    return;
+  }
+
+  form_set_error('name', t('%name is connected to an external authentication system.', array(
+    '%name' => $form_state['values']['name'],
+  )));
+}
