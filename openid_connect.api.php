@@ -26,7 +26,7 @@
  * @return bool
  *   TRUE if user should be logged into Drupal. FALSE if not.
  */
-function hook_openid_connect_pre_authorize($tokens, $account, $userinfo, $client_name) {
+function hook_openid_connect_pre_authorize(array $tokens, $account, array $userinfo, $client_name) {
   $allowed_users = array('user1@example.com', 'user2@example.com');
   // Allow only specific users to log in.
   if (in_array($userinfo['email'], $allowed_users)) {
@@ -52,16 +52,17 @@ function hook_openid_connect_pre_authorize($tokens, $account, $userinfo, $client
  * @param bool $is_new
  *   Whether the account has just been created via OpenID Connect.
  */
-function hook_openid_connect_post_authorize($tokens, $account, $userinfo, $client_name, $is_new) {
+function hook_openid_connect_post_authorize(array $tokens, $account, array $userinfo, $client_name, $is_new) {
   drupal_set_message($is_new ? t('Welcome!') : t('Welcome back!'));
 }
 
 /**
  * Alter the list of possible scopes and claims.
  *
- * @see openid_connect_claims
- *
  * @param array &$claims
+ *   Array of claims to be altered.
+ *
+ * @see openid_connect_claims
  */
 function hook_openid_connect_claims_alter(array &$claims) {
   $claims['my_custom_claim'] = array(
