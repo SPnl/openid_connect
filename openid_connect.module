@@ -812,6 +812,10 @@ function openid_connect_complete_authorization($client, $tokens, &$destination) 
   }
 
   $account = openid_connect_user_load_by_sub($sub, $client->getName());
+  if (empty($account)) {
+    $account = openid_connect_user_load_by_email($userinfo);
+  }
+
   $results = module_invoke_all('openid_connect_pre_authorize', $tokens, $account, $userinfo, $client->getName());
 
   // Deny access if any module returns FALSE.
@@ -968,4 +972,24 @@ function openid_connect_array_search_key($needle_key, $array) {
 
 function openid_connect_update_projects_alter(&$projects){
   unset($projects['openid_connect']);
+}
+
+function openid_connect_user_load_by_email($userinfo) {
+  if (!empty($userinfo['email'])) {
+    $account = user_load_by_mail($userinfo['email']);
+    if (!empty($account)) {
+      // Update userinfo.
+      $edit = array(
+        'name' => openid_connect_generate_username($userinfo['sub'], $userinfo, 'procurios'),
+        'pass' => user_password(),
+        'mail' => $userinfo['email'],
+        'init' => $userinfo['email'],
+        'status' => 1,
+        'openid_connect_client' => 'procurios',
+        'openid_connect_sub' => $userinfo['sub'],
+      );
+      $account = user_save($account, $edit);
+      return $account;
+    }
+  }
 }
